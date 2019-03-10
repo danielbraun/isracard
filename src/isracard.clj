@@ -18,7 +18,7 @@
 
 (defn authenticate [{:keys [MisparZihuy Sisma cardSuffix]}]
   (let [{:keys [body]
-         :as res} (-> (base-request "performLogonI")
+         :as res} (-> (base-request {} "performLogonI")
                       (assoc :method :post
                              :query-params {:reqName "performLogonI"}
                              :content-type :application/x-www-form-urlencoded
