@@ -9,9 +9,10 @@
 
 (def ^:private request (comp handle-errors http/request))
 
-(defn- base-request [reqName]
+(defn- base-request [{:keys [cookies] :as auth} reqName]
   {:url "https://digital.isracard.co.il/services/ProxyRequestHandler.ashx"
    :method :get
+   :cookies cookies
    :query-params {:reqName reqName}
    :as :json})
 
@@ -30,14 +31,14 @@
       (throw (ex-info message body))
       res)))
 
-(defn cards-list []
-  (-> (base-request "CardsList_102Digital")
-      (merge (select-keys auth-res [:cookies]))
+(defn cards-list [auth]
+  (-> auth
+      (base-request "CardsList_102Digital")
       request))
 
-(defn card-transactions [params]
-  (-> (base-request "CardsTransactionsList")
-      (merge (select-keys auth-res [:cookies]))
+(defn card-transactions [auth params]
+  (-> auth
+      (base-request "CardsTransactionsList")
       (update :query-params merge params)
       request))
 
